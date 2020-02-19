@@ -129,7 +129,7 @@ module Api
         end
 
         post do
-          if !params.key?('reverses') || !params['reverses'].is_a?(Array)
+          if !params.key?(:reverses) || !params[:reverses].is_a?(Array)
             error!('Missing or invalid field "reverses".', 400)
           end
           params_limit = APIBase.profile(params[:api_key])[:params_limit]
@@ -138,15 +138,15 @@ module Api
           end
           count :reverse, true, params[:reverses].count
 
-          params['reverses'].each{ |param|
+          params[:reverses].each do |param|
             begin
-              param[:lat] = Float(param[:lat].gsub(',', '.'))
-              param[:lng] = Float(param[:lng].gsub(',', '.'))
+              param[:lat] = param[:lat].is_a?(Float) ? param[:lat] : Float(param[:lat].gsub(',', '.'))
+              param[:lng] = param[:lng].is_a?(Float) ? param[:lng] : Float(param[:lng].gsub(',', '.'))
             rescue
               param[:lat] = nil
               param[:lng] = nil
             end
-          }
+          end
           results = GeocoderWrapper.wrapper_reverses(APIBase.profile(params[:api_key]), params[:reverses])
           if results
             count_incr :reverse, transactions: results.size
