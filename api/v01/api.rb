@@ -115,7 +115,7 @@ module Api
           success: Status
         }
         get do
-          services = APIBase.services(params[:api_key])
+          services = APIBase.profile(params[:api_key])
           present(hash: GeocoderWrapper.release, geocoders: services[:geocoders].keys.map{ |ke| {ke => services[:geocoders][ke].version} })
         end
       end

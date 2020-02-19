@@ -3,6 +3,8 @@ Geocoder API
 Offers an unified API for multiple geocoders like [Addok](https://github.com/etalab/addok), OpenCageData, Here, Google based on countries distribution. The main idea of this API is to define some specific geocoder for some countries and a fallback geocoder for all other countries.
 Build in Ruby with a [Grape](https://github.com/intridea/grape) REST [swagger](http://swagger.io/) API compatible with [geocodejson-spec](https://github.com/yohanboniface/geocodejson-spec). Internal use of [Geocoder Gem](https://github.com/alexreisner/geocoder).
 
+[![Build Status](https://travis-ci.com/mapotempo/geocoder-api.svg?branch=dev)](https://travis-ci.com/mapotempo/geocoder-api)
+
 Prerequisite
 ============
 

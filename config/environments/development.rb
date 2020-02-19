@@ -69,7 +69,7 @@ module GeocoderWrapper
       # Set the appropriate authentication if required
       here: ['APP_ID', 'APP_CODE'],
       opencagedata: 'API_KEY'
-    },
+    }
     redis_count: REDIS_COUNT,
   }
 end

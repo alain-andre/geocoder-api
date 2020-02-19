@@ -264,12 +264,6 @@ module Wrappers
         type: 'Feature'
       }
     end
-
-    protected
-
-    def version(query = nil)
-      "#{super} - addok:1.1.0-rc1.2"
-    end
   end
 
   class FakeFileStringIO < StringIO
