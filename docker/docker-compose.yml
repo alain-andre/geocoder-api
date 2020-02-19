@@ -18,6 +18,13 @@ services:
       - addok-lu
     environment:
       APP_ENV: production # Swith to "development" for more traces
+      REDIS_COUNT_HOST: redis-count
+
+  redis-count:
+    image: redis:${REDIS_VERSION:-3.2-alpine}
+    volumes:
+      - ./data-count:/data
+    command: redis-server --appendonly yes
 
   redis-cache:
     image: redis:${REDIS_VERSION:-3.2-alpine}
