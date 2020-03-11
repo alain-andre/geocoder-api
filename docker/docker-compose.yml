@@ -8,8 +8,7 @@ services:
     ports:
       - "8081:80" # HOST:CONTAINER, edit only HOST part
     volumes:
-        - ./production.rb:/srv/app/config/environments/production.rb
-        - ./production.rb:/srv/app/config/environments/development.rb
+        - ../config/environments/production.rb:/srv/app/config/environments/production.rb
         - ./poly:/srv/app/poly
     restart: always
     links:
@@ -24,7 +23,7 @@ services:
     image: redis:${REDIS_VERSION:-3.2-alpine}
     volumes:
       - ./data-count:/data
-    command: redis-server --save ""
+    command: redis-server --appendonly yes
 
   redis-cache:
     image: redis:${REDIS_VERSION:-3.2-alpine}

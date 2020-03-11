@@ -1,33 +1,35 @@
-FROM mapotempo/nginx-passenger:2.0.1
+FROM phusion/passenger-ruby25
 
-LABEL maintainer="Mapotempo <contact@mapotempo.com>"
+LABEL maintainer="Mapotempo <tech@mapotempo.com>"
 
+ADD . /srv/app
+WORKDIR /srv/app
+
+# Install app
 ENV RAILS_ENV production
 ENV REDIS_HOST redis-cache
 
-ADD . /srv/app
-
-# Install app
 RUN apt-get update && \
-    apt-get install -y git build-essential zlib1g-dev gdal-bin \
-            zlib1g libsqlite3-mod-spatialite libsqlite3-dev \
-            libspatialite-dev && \
-    cd /srv/app && \
-    bundle install --full-index --without test development && \
-    \
-# Fix permissions
-    chown -R www-data:www-data . && \
-    \
-# Cleanup Debian packages
-    apt-get remove -y git build-essential zlib1g-dev gdal-bin \
-            libsqlite3-dev libspatialite-dev && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    echo -n > /var/lib/apt/extended_states && \
-    rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+  apt-get install -y git build-essential zlib1g-dev gdal-bin \
+          zlib1g libsqlite3-mod-spatialite libsqlite3-dev \
+          libspatialite-dev libnginx-mod-http-headers-more-filter && \
+  gem install bundler --version 2 && \
+  bundle check || bundle install --full-index --without test development -j $(nproc)
 
-ADD docker/env.d/* /etc/nginx/env.d/
+# Cleanup Debian packages
+RUN apt-get remove -y git build-essential zlib1g-dev gdal-bin \
+            libsqlite3-dev libspatialite-dev && \
+  apt-get autoremove -y && \
+  apt-get clean && \
+  echo -n > /var/lib/apt/extended_states && \
+  rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+
+# Enable Nginx and Passenger
+RUN rm -f /etc/service/nginx/down
+
+# Enable app
+RUN rm /etc/nginx/sites-enabled/default
+ADD docker/env.d/* /etc/nginx/main.d/
+ADD docker/webapp.conf /etc/nginx/sites-enabled/
 
 VOLUME /srv/app/poly
-
-WORKDIR /srv/app
